@@ -99,9 +99,5 @@ jobs:
 
 
       # Running Terraform IT Test
-#    - name: Terraform ITest
-#    - uses: actions/setup-go@v3
-#      with:
-#        go-version: '1.19'
-#        cache: true
-#      run: go version
+    - name: Terraform ITtest
+      run: go version
