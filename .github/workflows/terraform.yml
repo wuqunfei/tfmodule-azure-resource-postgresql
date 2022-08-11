@@ -64,6 +64,11 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
+      GOROOT: "/usr/lib/go"
+      GOBIN: "/usr/lib/go/bin"
+      ARM_USE_MSI: true
+
+
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -111,4 +116,4 @@ jobs:
 
       # Running Terraform IT Test
     - name: Terraform ITtest
-      run: go version
+      run:  go test -v timeout 10m test/module_test.go
