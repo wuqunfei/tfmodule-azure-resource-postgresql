@@ -90,9 +90,7 @@ jobs:
 
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: |
-        echo $ARM_CLIENT_ID
-        terraform plan -input=false
+      run: terraform plan -input=false
         
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
