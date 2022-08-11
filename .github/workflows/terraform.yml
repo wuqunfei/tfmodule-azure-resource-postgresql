@@ -69,17 +69,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-
-    # Running Terraform IT Test
-    - name: Terraform ITest
-    - uses: actions/checkout@v3
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '1.19'
-        cache: true
-      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
-    - run: go version
-
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
@@ -104,3 +93,11 @@ jobs:
       if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
 
+
+     # Running Terraform IT Test
+    - name: Terraform ITest
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '1.19'
+        cache: true
+      run: go version
