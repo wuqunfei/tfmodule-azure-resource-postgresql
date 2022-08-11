@@ -45,4 +45,5 @@ variable "db_user" {
 variable "db_password" {
   description = "Database User Password"
   type        = string
+  default     = "2021#Munich"
 }
