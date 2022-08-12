@@ -83,7 +83,8 @@ jobs:
     - name : Install Go tool
       run: |
         sudo apt-get install golang-go
-#        sudo go install github.com/terraform-docs/terraform-docs@v0.16.0
+        sudo go install github.com/terraform-docs/terraform-docs@v0.16.0
+        sudo pip install terraform-compliance
 
     # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -99,21 +100,38 @@ jobs:
     - name: Terraform Format
       run: terraform fmt -check
 
+    # Check with Sonar
+    - name: Terraform Sonar Check
+      run: |
+        sonar-scanner \
+        -Dsonar.projectKey=azpostgresql \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=https://sonarcloud.io \
+        -Dsonar.login=298152e0a5909b615cb6e1ac0f5c0b2a9be3d3e5
+
     # Generates an execution plan for Terraform
     - name: Terraform Plan
-      run: terraform plan -input=false
-        
+      run: |
+        terraform plan -input=false -out=main.tfplan
+        terraform show -json main.tfplan > main.tfplan.json
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Docs
+      run:  terraform-docs --sort=false md ./ > README.md
+
+      # Running Terraform IT Test in Go
+    - name: Terraform Integration Test
+      run:  go test -v timeout 10m test/module_test.go
+
+      # Running Terraform IT Test
+    - name: Terraform Compliance Test
+      run: |
+        terraform-compliance -f features -p main.tfplan.json
 
 #    - name: Terraform Apply
 #      if: github.ref == 'refs/heads/"main"' && github.event_name == 'push'
 #      run: terraform apply -auto-approve -input=false
 
-#    - name: Terraform Docs
-#      run:  terraform-docs --sort=false md ./ > README.md
+      # Register TF Module
+    - name: Terraform Register
+      run: echo 'Register module'
 
-      # Running Terraform IT Test
-    - name: Terraform ITtest
-      run:  go test -v timeout 10m test/module_test.go
