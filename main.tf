@@ -39,7 +39,6 @@ resource "azurerm_postgresql_server" "postgresqlserver" {
   administrator_login_password  = var.db_password
   version                       = "11"
   ssl_enforcement_enabled       = true
-  public_network_access_enabled = true
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
