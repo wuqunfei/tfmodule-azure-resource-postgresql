@@ -61,4 +61,5 @@ resource "random_password" "password" {
   special = true
   upper   = true
   lower   = true
+  number = true
 }
